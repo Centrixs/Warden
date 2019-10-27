@@ -10,6 +10,5 @@ Download Warden from this GitHub Repo and insert the "warden" folder into your g
 # Setting up Warden
 As of v2.0, no setup is necessary! If you'd like to edit some configuration variables, you can find the configuration in sv_warden.lua.
 
-# Links & Information
-* [Workshop Page](http://steamcommunity.com/sharedfiles/filedetails/?id=1134625427)
+# Links
 * [Get IP Intel](https://getipintel.net/)
