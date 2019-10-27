@@ -146,7 +146,7 @@ function WARDEN.CheckIP( ip, callback, useCache )
 		return
 	end
 
-	http.Fetch( "http://proxy.mind-media.com/block/proxycheck.php?ip="..ip,
+	http.Fetch( "http://check.getipintel.net/check.php?ip=“ .. ip.. “&contact=fagfagas39@gmail.com",
 		function( info )
 			callback( info )
 
@@ -198,13 +198,11 @@ local function WARDEN_PlayerInitialSpawn( ply )
 
 	WARDEN_Log( 2, "Verifying the IP address of "..ply:Nick().."..." )
 	WARDEN.CheckIP( ply:IPAddress(), function( isProxy )
-		if isProxy == "Y" then
+		if isProxy >= "0.995" then
 			WARDEN_Log( 2, "The IP address of "..ply:Nick().." was marked as a proxy. Kicking player..." )
 			ply:Kick( WARDEN.Config.KickMessages["Proxy IP"] )
-		elseif isProxy == "N" then
+		elseif isProxy <= "0.80" then
 			WARDEN_Log( 2, "The IP address of "..ply:Nick().." is clean." )
-		elseif isProxy == "E" then
-			WARDEN_Log( 1, "Could not connect to the API to check the IP address of "..ply:Nick().."!" )
 		end
 	end )
 end
@@ -229,7 +227,7 @@ if WARDEN.Config.Debug then
 				return
 			end
 
-			WARDEN_Log( 0, args[1].." is"..((isProxy == "N") and " NOT" or "").." a proxy IP address." )
+			WARDEN_Log( 0, args[1].." is"..((isProxy >= "0.995") and " NOT" or "").." a proxy IP address." )
 		end )
 	end )
 end
