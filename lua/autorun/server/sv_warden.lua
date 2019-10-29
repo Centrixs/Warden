@@ -199,10 +199,10 @@ local function WARDEN_PlayerInitialSpawn( ply )
 
 	WARDEN_Log( 2, "Verifying the IP address of "..ply:Nick().."..." )
 	WARDEN.CheckIP( ply:IPAddress(), function( isProxy )
-		if isProxy >= "0.995" then
+		if isProxy >= 0.995 then
 			WARDEN_Log( 2, "The IP address of "..ply:Nick().." was marked as a proxy. Kicking player..." )
 			ply:Kick( WARDEN.Config.KickMessages["Proxy IP"] )
-		elseif isProxy <= "0.80" then
+		elseif isProxy <= 0.80 then
 			WARDEN_Log( 2, "The IP address of "..ply:Nick().." is clean." )
 		end
 	end )
@@ -223,7 +223,7 @@ if WARDEN.Config.Debug then
 		end
 
 		WARDEN.CheckIP( args[1], function( isProxy )
-			WARDEN_Log( 0, args[1].." is"..((isProxy >= "0.995") and " NOT" or "").." a proxy IP address." )
+			WARDEN_Log( 0, args[1].." is"..((isProxy >= 0.995) and " NOT" or "").." a proxy IP address." )
 		end )
 	end )
 end
