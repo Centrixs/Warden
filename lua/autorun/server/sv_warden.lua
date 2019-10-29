@@ -112,10 +112,15 @@ end
 				[string/bool] proxyInfo
 						The return value from the IP check. False if connection failed.
 
-						POSSIBLE VALUES:
-							Y = Marked as proxy
-							N = Not marked as proxy
-							E = Error connecting to the site.
+				POSSIBLE VALUES:
+					Given an IP address, the system will return a probabilistic value (between a value of 0 and 1) 
+					of how likely the IP is a VPN / proxy / hosting / bad IP. 
+					A value of 1 means that IP is explicitly banned (a web host, VPN, or TOR node) by their dynamic lists. 
+					Otherwise, the output will return a real number value between 0 and 1, of how likely
+					the IP is bad / VPN / proxy, which is inferred through machine learning & probability theory 
+					techniques using dynamic checks with large datasets. Billions of new records are parsed 
+					each month to ensure the datasets have the latest information and old records automatically expire. 
+					The system is designed to be efficient, fast, simple, and accurate.
 
 		[boolean] useCache = true
 			Whether or not you would like to attempt to use the cache.
@@ -152,10 +157,6 @@ function WARDEN.CheckIP( ip, callback, useCache )
 
 			-- Add result to cache
 			WARDEN.CACHE[ip] = info
-		end,
-
-		function()
-			callback( "E" )
 		end
 	)
 end
@@ -222,11 +223,6 @@ if WARDEN.Config.Debug then
 		end
 
 		WARDEN.CheckIP( args[1], function( isProxy )
-			if isProxy == "E" then
-				WARDEN_Log( 1, "Could not connect to the API site." )
-				return
-			end
-
 			WARDEN_Log( 0, args[1].." is"..((isProxy >= "0.995") and " NOT" or "").." a proxy IP address." )
 		end )
 	end )
