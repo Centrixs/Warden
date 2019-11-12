@@ -216,6 +216,12 @@ local function WARDEN_PlayerInitialSpawn( ply )
 end
 hook.Add( "PlayerInitialSpawn", "WARDEN_PlayerInitialSpawn", WARDEN_PlayerInitialSpawn)
 
+hook.Add( "PlayerInitialSpawn", "Shame VPN users", function(ply)
+if WARDEN.Config.KickProxy then
+	hook.Remove( "PlayerInitialSpawn", "Shame VPN users")
+else
+	ChatPrint(ply:Nick() .. " is gay for using a proxy.")
+end)
 -----------------
 -- Concommands --
 -----------------
