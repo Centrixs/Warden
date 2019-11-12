@@ -18,10 +18,13 @@ WARDEN.CACHE = WARDEN.CACHE or {}
 WARDEN.Config.Log = true
 
 -- Used for debugging, you probably don't need this set to true.
-WARDEN.Config.Debug = false
+WARDEN.Config.Debug = true
 
 -- How long before we should clear the cache, in seconds.
 WARDEN.Config.CacheTimer = 86400
+
+--should we kick proxies?
+WARDEN.Config.KickProxy = false
 
 -- IP Addresses that we don't bother to check.
 WARDEN.Config.NoCheck = {
@@ -151,7 +154,7 @@ function WARDEN.CheckIP( ip, callback, useCache )
 		return
 	end
 
-	http.Fetch( "http://check.getipintel.net/check.php?ip=“ .. ip.. “&contact=fagfagas39@gmail.com",
+	http.Fetch( "http://check.getipintel.net/check.php?ip=" .. ip.. "&contact=fagfagas39@gmail.com",
 		function( info )
 			callback( info )
 
@@ -201,7 +204,9 @@ local function WARDEN_PlayerInitialSpawn( ply )
 	WARDEN.CheckIP( ply:IPAddress(), function( isProxy )
 		if isProxy >= 0.995 then
 			WARDEN_Log( 2, "The IP address of "..ply:Nick().." was marked as a proxy. Kicking player..." )
-			ply:Kick( WARDEN.Config.KickMessages["Proxy IP"] )
+			if WARDEN.Config.KickProxy then
+				ply:Kick( WARDEN.Config.KickMessages["Proxy IP"] )
+			end
 		elseif isProxy <= 0.80 then
 			WARDEN_Log( 2, "The IP address of "..ply:Nick().." is clean." )
 		end

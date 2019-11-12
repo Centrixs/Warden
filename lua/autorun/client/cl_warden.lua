@@ -1,7 +1,0 @@
-concommand.Add( "warden_version", function() 
-	print("==========================")
-	print("= THIS SERVER IS RUNNING =")
-	print("=     WARDEN V2.1.0      =")
-	print("=     BY: SILHOUHAT      =")
-	print("==========================")
-end )
