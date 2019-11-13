@@ -211,10 +211,12 @@ local function WARDEN_PlayerInitialSpawn( ply )
 	WARDEN_Log( 2, "Verifying the IP address of "..ply:Nick().."..." )
 	WARDEN.CheckIP( ply:IPAddress(), function( isProxy )
 		if tonumber(isProxy) >= 0.995 then
+			local proxy = true
 			if WARDEN.Config.KickProxy then
 				WARDEN_Log( 2, "The IP address of "..ply:Nick().." was marked as a proxy. Kicking player..." )
 				ply:Kick( WARDEN.Config.KickMessages["Proxy IP"] )
 			else
+				local proxy = false
 				WARDEN_Log( 2, "The IP address of "..ply:Nick().." was marked as a proxy.")
 			end
 		elseif tonumber(isProxy) <= 0.80 then
@@ -223,15 +225,28 @@ local function WARDEN_PlayerInitialSpawn( ply )
 	end )
 end
 
-local function MessageVPN()
+local function AdminCheck(ply)
+	if _G['ULiB'] or _G['ULX'] then
+		if ucl.Query(ply, "ulx kick") or ply:IsAdmin() or ply:IsSuperAdmin() then
+			return true
+		end
+	else 
+		if ply:IsAdmin() or ply:IsSuperAdmin() then
+			return true
+		end
+	end
+end
+local function MessageVPN(ply)
 	if !WARDEN.Config.Notify then
 		hook.Remove( "PlayerInitialSpawn", "VPNUserMessage")
 	end
 	for k,v in pairs(player.GetAll()) do
 		if WARDEN.Config.NotifyAll then
-			v:ChatPrint(ply:Nick() .. " is using a proxy.")
+			if proxy then
+				v:ChatPrint(ply:Nick() .. " is using a proxy.")
+			end
 		else
-			if ucl.Query(v, "ulx kick") or v:IsAdmin() or v:IsSuperAdmin() then
+			if AdminCheck(v) then
 				v:ChatPrint(ply:Nick() .. " is using a proxy.")
 			end
 		end
@@ -256,7 +271,7 @@ if WARDEN.Config.Debug then
 		end
 
 		WARDEN.CheckIP( args[1], function( isProxy )
-			WARDEN_Log( 0, args[1].." is"..((isProxy >= 0.995) and " NOT" or "").." a proxy IP address." )
+			WARDEN_Log( 0, args[1].." is"..((tonumber(isProxy) >= 0.995) and " NOT" or "").." a proxy IP address." )
 		end )
 	end )
 end
