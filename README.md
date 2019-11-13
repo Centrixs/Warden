@@ -1,5 +1,5 @@
 # What is Warden?
-Warden is an API wrapper for the [Get IP Intel](https://getipintel.net/) that allows servers to automatically prevent clients with identified proxy IPs from joining.
+Warden is an API wrapper for the [Get IP Intel](https://getipintel.net/) that allows servers to automatically prevent clients on proxies from joining or notify admins/players when players with identified proxy IPs join.
 
 # How does Warden work?
 Warden uses the Get IP Intel API to send the IP address of the joining player and verify that it is not a proxy. If it is, it automatically kicks the player. That's it!
