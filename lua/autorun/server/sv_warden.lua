@@ -26,6 +26,14 @@ WARDEN.Config.CacheTimer = 86400
 --should we kick proxies?
 WARDEN.Config.KickProxy = false
 
+--notify in chat if someone is using a proxy?
+WARDEN.Config.Notify = true
+
+--should we notify everyone or just staff that someone is using a proxy? 
+--false = only staff 
+--true = everyone
+WARDEN.Config.NotifyAll = false
+
 -- IP Addresses that we don't bother to check.
 WARDEN.Config.NoCheck = {
 	"loopback",
@@ -214,17 +222,26 @@ local function WARDEN_PlayerInitialSpawn( ply )
 		end
 	end )
 end
-hook.Add( "PlayerInitialSpawn", "WARDEN_PlayerInitialSpawn", WARDEN_PlayerInitialSpawn)
 
-hook.Add( "PlayerInitialSpawn", "Shame VPN users", function(ply)
-	if WARDEN.Config.KickProxy then
-		hook.Remove( "PlayerInitialSpawn", "Shame VPN users")
-	else
-		for k,v in pairs(player.GetAll()) do
-			v:ChatPrint(ply:Nick() .. " is gay for using a proxy.")
+local function MessageVPN()
+	if !WARDEN.Config.Notify then
+		hook.Remove( "PlayerInitialSpawn", "VPNUserMessage")
+	end
+	for k,v in pairs(player.GetAll()) do
+		if WARDEN.Config.NotifyAll then
+			v:ChatPrint(ply:Nick() .. " is using a proxy.")
+		else
+			if ucl.Query(v, "ulx kick") or v:IsAdmin() or v:IsSuperAdmin() then
+				v:ChatPrint(ply:Nick() .. " is using a proxy.")
+			end
 		end
 	end
-end)
+end
+
+hook.Add( "PlayerInitialSpawn", "WARDEN_PlayerInitialSpawn", WARDEN_PlayerInitialSpawn)
+
+hook.Add( "PlayerInitialSpawn", "WARDEN_VPNUserMessage", MessageVPN)
+
 -----------------
 -- Concommands --
 -----------------
